@@ -82,7 +82,7 @@
     <Compile Include="timer\Timer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <SkcPlugin Include="net.digitalPrimates.GuiceMetadataPlugin, RandoriSharpKitExtensions">
+    <SkcPlugin Include="randori.compiler.RandoriCompilerPlugin, RandoriCompilerPlugin">
       <InProject>false</InProject>
     </SkcPlugin>
   </ItemGroup>

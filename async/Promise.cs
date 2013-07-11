@@ -219,6 +219,70 @@ namespace randori.async {
             }
         }
 
+        public Promise<T> any( params object[] args ) {
+            var that = this;
+
+            for ( int i = 0; i<args.Length; i++ ) {
+                Promise<T> existingPromise = args[i] as Promise<T>;
+                existingPromise.thenR<T>(
+                        delegate(T innerResponse)
+                        {
+							that.fullfill(innerResponse);
+							return existingPromise;
+                        },
+                        delegate(object innerReason) {
+                            that.internalReject(innerReason);
+							return existingPromise;
+                        }
+                );
+            }
+            return this;
+        }
+
+        public Promise<T> all( params object[] args ) {
+            var fulfilledArray = new JsArray();
+            var that = this;
+
+            for ( int i = 0; i<args.Length; i++ ) {
+                fulfilledArray[i] = -1;
+
+                var existingPromise = args[i] as Promise<T>;
+                existingPromise.thenR<T>(
+                    createItemFulfilledHandler( fulfilledArray, i ),
+                    delegate(object innerReason) {
+                        that.internalReject(innerReason);
+						return null;
+                    }
+                );
+            }
+            return this;
+        }
+
+		private OnFullfilledDelegate<T> createItemFulfilledHandler( JsArray array, int index ) {
+            Promise<T> that = this;
+			return delegate(T innerResponse)
+			{
+				array[index] = innerResponse;
+
+				bool completed = true;
+				for (int j = 0; j < array.length; j++)
+				{
+					if (array[j].As<int>() == -1)
+					{
+						completed = false;
+						break;
+					}
+				}
+
+				if (completed)
+				{
+					that.fullfill(array.As<T>());
+				}
+
+				return that;
+			};
+		}
+
         public Promise() {
             this.thenContracts = new JsArray<dynamic>();
         }

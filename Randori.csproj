@@ -90,7 +90,7 @@
     <Folder Include="loader\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RandoriGuiceJS\RandoriGuiceJS.csproj">
+    <ProjectReference Include="..\RandoriGuiceJS\RandoriGuice.csproj">
       <Project>{37704182-0ED6-44E6-B351-69A9BAD717EE}</Project>
       <Name>RandoriGuiceJS</Name>
     </ProjectReference>
